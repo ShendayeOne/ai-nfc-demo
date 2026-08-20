@@ -33,8 +33,11 @@ import java.util.Date;
 
 /** NFC Reader 的单页演示入口，负责演示/真实模式切换和结果展示。 */
 public class MainActivity extends AppCompatActivity {
+    /** 模拟标签靠近的延迟，制造“正在读取”的演示节奏，不是真实 NFC 行为。 */
     private static final long SIMULATION_DELAY_MS = 450L;
+    /** 读取成功时的短振动时长，仅用于触觉反馈确认。 */
     private static final long SUCCESS_VIBRATION_MS = 70L;
+    /** 模拟 Text Record 使用的语言码，仅影响 payload 中语言码字段。 */
     private static final String DEMO_LANGUAGE = "zh";
 
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -55,8 +58,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView resultStatus;
     private TextView resultTime;
     private boolean resumed;
+    /** 尚未执行的模拟任务；非空表示正在“读取中”，模式切换或离开页面时需要取消。 */
     private Runnable pendingSimulation;
 
+    /** 真实 NFC 读取回调；NfcReader 已保证回调在主线程，可直接更新 UI。 */
     private final NfcReaderCallback readerCallback = new NfcReaderCallback() {
         @Override
         public void onResult(NfcReadResult result) {
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /** 初始化页面：Edge-to-Edge、安全区、控件绑定，并默认进入演示模式。 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         renderMode();
     }
 
+    /** 页面可见时刷新真实模式状态：从设置页返回后 NFC 开关可能已变化，需要重新 start。 */
     @Override
     protected void onResume() {
         super.onResume();
@@ -89,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         updateReaderState();
     }
 
+    /** 页面不可见时停止 NFC 读取并复位未完成的模拟任务。 */
     @Override
     protected void onPause() {
         resumed = false;
@@ -105,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    /** 配置 Edge-to-Edge 安全区，保证状态栏、标题栏和滚动内容在各机型上不被系统栏遮挡。 */
     private void applySystemInsets() {
         View root = findViewById(R.id.main);
         View statusBarInset = findViewById(R.id.view_status_bar_inset);
@@ -135,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         ViewCompat.requestApplyInsets(root);
     }
 
+    /** 绑定布局中的全部控件引用，集中管理避免 findViewById 散落。 */
     private void bindViews() {
         demoSwitch = findViewById(R.id.switch_demo);
         simulationCard = findViewById(R.id.card_simulation);
@@ -152,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
         resultTime = findViewById(R.id.text_result_time);
     }
 
+    /** 绑定开关与三个模拟按钮的点击事件。 */
     private void bindActions() {
         demoSwitch.setOnCheckedChangeListener((button, checked) -> renderMode());
         simulateTextButton.setOnClickListener(view -> simulateText());
@@ -159,6 +170,10 @@ public class MainActivity extends AppCompatActivity {
         simulateAllButton.setOnClickListener(view -> simulateAll());
     }
 
+    /**
+     * 根据演示模式开关重渲染页面：
+     * 演示模式展示模拟卡片并停止真实读取；真实模式隐藏模拟卡片并启动 Reader Mode。
+     */
     private void renderMode() {
         cancelPendingSimulation();
         boolean demoMode = demoSwitch.isChecked();
@@ -177,6 +192,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 仅在真实模式且页面已恢复时启动 Reader Mode，并按设备 NFC 能力更新图标、描述和状态；
+     * onCreate 早于 bindViews 完成时 demoSwitch 可能为 null，需要先判空。
+     */
     private void updateReaderState() {
         if (demoSwitch == null || demoSwitch.isChecked() || !resumed) {
             return;
@@ -203,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** 模拟标准 RTD_TEXT 标签读取。 */
     private void simulateText() {
         startSimulation(() -> NfcSimulator.simulateText(
                 DEMO_LANGUAGE,
@@ -210,10 +230,12 @@ public class MainActivity extends AppCompatActivity {
         ));
     }
 
+    /** 模拟标准 RTD_URI 标签读取。 */
     private void simulateUrl() {
         startSimulation(() -> NfcSimulator.simulateUri(getString(R.string.demo_url_content)));
     }
 
+    /** 模拟同一条 NDEF Message 同时包含 Text 与 URI 的标签读取。 */
     private void simulateAll() {
         startSimulation(() -> NfcSimulator.simulateTextAndUri(
                 DEMO_LANGUAGE,
@@ -222,6 +244,11 @@ public class MainActivity extends AppCompatActivity {
         ));
     }
 
+    /**
+     * 执行一次模拟读取：先展示“读取中”状态并禁用按钮防重复点击，
+     * 延迟后走与真实读取相同的解析链路生成结果。
+     * 模拟数据构造失败时按格式异常展示，不让异常抛到 UI 层。
+     */
     private void startSimulation(ResultFactory factory) {
         cancelPendingSimulation();
         setSimulationButtonsEnabled(false);
@@ -242,6 +269,10 @@ public class MainActivity extends AppCompatActivity {
         mainHandler.postDelayed(pendingSimulation, SIMULATION_DELAY_MS);
     }
 
+    /**
+     * 展示读取成功结果：振动反馈、成功图标、类型标签和内容。
+     * source 区分结果来自真实读取还是模拟输入。
+     */
     private void showSuccess(NfcReadResult result, String source) {
         vibrateOnSuccess();
         stateIcon.setImageResource(R.drawable.ic_status_success);
@@ -270,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
         resultTime.setText(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date()));
     }
 
+    /** 展示读取失败结果：占位内容、按当前模式标记来源，并把错误枚举映射为红色提示文案。 */
     private void showReadError(NfcReadError error) {
         stateIcon.setImageResource(R.drawable.ic_status_waiting);
         heroDescription.setText(R.string.read_error_description);
@@ -284,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
         resultTime.setText(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date()));
     }
 
+    /** 把 nfc-reader 的稳定错误枚举映射为用户可见文案，文案统一放在 strings.xml。 */
     private String errorMessage(NfcReadError error) {
         switch (error) {
             case NOT_NDEF:
@@ -300,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** 把结果区全部复位为占位符，用于模式切换或初始进入页面。 */
     private void resetResult() {
         resultType.setText(R.string.result_placeholder);
         resultTextContent.setText(R.string.result_placeholder);
@@ -315,12 +349,14 @@ public class MainActivity extends AppCompatActivity {
         resultStatus.setTextColor(ContextCompat.getColor(this, colorRes));
     }
 
+    /** 统一启用/禁用三个模拟按钮，避免模拟期间重复触发。 */
     private void setSimulationButtonsEnabled(boolean enabled) {
         simulateTextButton.setEnabled(enabled);
         simulateUrlButton.setEnabled(enabled);
         simulateAllButton.setEnabled(enabled);
     }
 
+    /** 空字符串内容显示为“（空内容）”，避免用户误以为没有读到。 */
     private String displayContent(String content) {
         return content.isEmpty() ? getString(R.string.result_empty_content) : content;
     }
@@ -342,6 +378,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** 取消尚未执行的模拟任务，防止模式切换或页面销毁后回调继续执行。 */
     private void cancelPendingSimulation() {
         if (pendingSimulation != null) {
             mainHandler.removeCallbacks(pendingSimulation);
@@ -349,6 +386,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** 模拟结果工厂：三种模拟按钮各自提供构造 NfcReadResult 的方式。 */
     private interface ResultFactory {
         NfcReadResult create();
     }
