@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="screen_horizontal_padding">20dp</dimen>
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_sm">8dp</dimen>
+    <dimen name="space_md">16dp</dimen>
+    <dimen name="space_lg">24dp</dimen>
+    <dimen name="space_xl">32dp</dimen>
+    <dimen name="card_corner">20dp</dimen>
+    <dimen name="card_corner_large">28dp</dimen>
+    <dimen name="text_small">13sp</dimen>
+    <dimen name="text_body">15sp</dimen>
+    <dimen name="text_section">18sp</dimen>
+    <dimen name="text_heading">22sp</dimen>
+    <dimen name="text_toolbar_title">20sp</dimen>
+</resources>

@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">NFC Reader</string>
+    <string name="title_nfc_reader">NFC 标签读取</string>
+    <string name="demo_mode">演示模式</string>
+    <string name="hero_demo_title">NFC Reader Demo</string>
+    <string name="hero_demo_description">选择一种标准标签，体验统一 NDEF 解析流程</string>
+    <string name="hero_real_title">请将 NFC 标签靠近设备</string>
+    <string name="nfc_ready_description">NFC 已就绪，正在等待标准 Text 或 URI 标签</string>
+    <string name="nfc_disabled_description">NFC 未开启，请在系统设置中开启后返回</string>
+    <string name="nfc_unsupported_description">当前设备不支持 NFC</string>
+    <string name="simulating_description">正在模拟 NFC 标签靠近……</string>
+    <string name="read_success_description">标签读取成功</string>
+    <string name="read_error_description">未能读取此 NFC 标签</string>
+    <string name="simulate_section_title">模拟 NFC 标签</string>
+    <string name="simulate_section_description">模拟数据同样经过 nfc-reader 的标准解析链路</string>
+    <string name="simulate_text">模拟 Text</string>
+    <string name="simulate_url">模拟 URL</string>
+    <string name="simulate_all">模拟 Text + URL</string>
+    <string name="result_section_title">读取结果</string>
+    <string name="result_label_type">类型</string>
+    <string name="result_label_text_content">Text 内容</string>
+    <string name="result_label_url_content">URL 内容</string>
+    <string name="result_label_source">来源</string>
+    <string name="result_label_status">状态</string>
+    <string name="result_label_time">读取时间</string>
+    <string name="result_placeholder">—</string>
+    <string name="result_empty_content">（空内容）</string>
+    <string name="result_type_text">Text</string>
+    <string name="result_type_url">URL</string>
+    <string name="result_type_text_and_url">Text + URL</string>
+    <string name="source_simulated">模拟</string>
+    <string name="source_real">真实</string>
+    <string name="status_waiting">等待读取</string>
+    <string name="status_reading">读取中</string>
+    <string name="status_success">读取成功</string>
+    <string name="status_nfc_disabled">NFC 未开启</string>
+    <string name="status_nfc_unsupported">设备不支持 NFC</string>
+    <string name="error_not_ndef">该标签不是标准 NDEF 标签</string>
+    <string name="error_empty_message">标签中没有可读取的 NDEF 内容</string>
+    <string name="error_unsupported_record">暂不支持此 NDEF Record，仅支持 Text 和 URI</string>
+    <string name="error_malformed_data">标签数据格式异常</string>
+    <string name="error_read_failed">标签读取失败，请重新靠近设备</string>
+    <string name="demo_text_content">欢迎使用 NFC Reader</string>
+    <string name="demo_url_content" translatable="false">https://www.example.com/nfc/demo</string>
+    <string name="nfc_icon_description">NFC 读取状态</string>
+</resources>

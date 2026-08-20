@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFFFF</color>
+    <color name="surface_background">#F5F8FC</color>
+    <color name="card_background">#FFFFFFFF</color>
+    <color name="hero_background">#EAF4FF</color>
+    <color name="icon_circle_background">#D7EAFE</color>
+    <color name="primary">#1769AA</color>
+    <color name="primary_dark">#0D4D82</color>
+    <color name="primary_soft">#D7EAFE</color>
+    <color name="success">#15956B</color>
+    <color name="waiting">#73849A</color>
+    <color name="text_primary">#172334</color>
+    <color name="text_secondary">#5E6D80</color>
+    <color name="card_stroke">#DCE5EF</color>
+    <color name="switch_thumb">#FFFFFFFF</color>
+</resources>
