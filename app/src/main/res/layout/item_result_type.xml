@@ -5,5 +5,9 @@
     android:layout_marginTop="@dimen/space_md"
     android:orientation="vertical">
     <TextView style="@style/Widget.AiNfcDemo.ResultLabel" android:text="@string/result_label_type" />
-    <TextView android:id="@+id/text_result_type" style="@style/Widget.AiNfcDemo.ResultValue" />
+    <TextView
+        android:id="@+id/text_result_type"
+        style="@style/Widget.AiNfcDemo.ResultValue"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/primary_dark" />
 </LinearLayout>

@@ -18,6 +18,16 @@
         <item name="cornerRadius">14dp</item>
         <item name="iconTint">@color/primary</item>
     </style>
+    <style name="Widget.AiNfcDemo.TextActionButton" parent="Widget.AiNfcDemo.ActionButton">
+        <item name="android:textColor">@color/result_text_value</item>
+        <item name="backgroundTint">@color/result_text_background</item>
+        <item name="iconTint">@color/result_text_label</item>
+    </style>
+    <style name="Widget.AiNfcDemo.UrlActionButton" parent="Widget.AiNfcDemo.ActionButton">
+        <item name="android:textColor">@color/result_url_value</item>
+        <item name="backgroundTint">@color/result_url_background</item>
+        <item name="iconTint">@color/result_url_label</item>
+    </style>
     <style name="Widget.AiNfcDemo.PrimaryActionButton" parent="Widget.Material3.Button">
         <item name="android:minHeight">52dp</item>
         <item name="android:textAllCaps">false</item>

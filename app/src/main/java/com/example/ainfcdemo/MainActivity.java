@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -186,18 +187,18 @@ public class MainActivity extends AppCompatActivity {
             case AVAILABLE:
                 stateIcon.setImageResource(R.drawable.ic_nfc);
                 heroDescription.setText(R.string.nfc_ready_description);
-                resultStatus.setText(R.string.status_waiting);
+                setResultStatus(R.string.status_waiting, R.color.waiting);
                 break;
             case DISABLED:
                 stateIcon.setImageResource(R.drawable.ic_status_waiting);
                 heroDescription.setText(R.string.nfc_disabled_description);
-                resultStatus.setText(R.string.status_nfc_disabled);
+                setResultStatus(R.string.status_nfc_disabled, R.color.error);
                 break;
             case UNSUPPORTED:
             default:
                 stateIcon.setImageResource(R.drawable.ic_status_waiting);
                 heroDescription.setText(R.string.nfc_unsupported_description);
-                resultStatus.setText(R.string.status_nfc_unsupported);
+                setResultStatus(R.string.status_nfc_unsupported, R.color.error);
                 break;
         }
     }
@@ -226,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         setSimulationButtonsEnabled(false);
         stateIcon.setImageResource(R.drawable.ic_status_waiting);
         heroDescription.setText(R.string.simulating_description);
-        resultStatus.setText(R.string.status_reading);
+        setResultStatus(R.string.status_reading, R.color.primary);
 
         pendingSimulation = () -> {
             pendingSimulation = null;
@@ -264,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 ? displayContent(result.getUrlContent())
                 : getString(R.string.result_placeholder));
         resultSource.setText(source);
-        resultStatus.setText(R.string.status_success);
+        setResultStatus(R.string.status_success, R.color.success);
         resultTime.setText(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date()));
     }
 
@@ -278,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
                 ? R.string.source_simulated
                 : R.string.source_real);
         resultStatus.setText(errorMessage(error));
+        resultStatus.setTextColor(ContextCompat.getColor(this, R.color.error));
         resultTime.setText(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date()));
     }
 
@@ -302,8 +304,14 @@ public class MainActivity extends AppCompatActivity {
         resultTextContent.setText(R.string.result_placeholder);
         resultUrlContent.setText(R.string.result_placeholder);
         resultSource.setText(R.string.result_placeholder);
-        resultStatus.setText(R.string.status_waiting);
+        setResultStatus(R.string.status_waiting, R.color.waiting);
         resultTime.setText(R.string.result_placeholder);
+    }
+
+    /** 状态文字同时更新语义色，让等待、成功和异常无需细读也能区分。 */
+    private void setResultStatus(int textRes, int colorRes) {
+        resultStatus.setText(textRes);
+        resultStatus.setTextColor(ContextCompat.getColor(this, colorRes));
     }
 
     private void setSimulationButtonsEnabled(boolean enabled) {

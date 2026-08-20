@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#FFFFFFFF</color>
-    <color name="surface_background">#F5F8FC</color>
+    <color name="surface_background">#F3F7F9</color>
+    <color name="toolbar_background">#FFFFFFFF</color>
     <color name="card_background">#FFFFFFFF</color>
-    <color name="hero_background">#EAF4FF</color>
-    <color name="icon_circle_background">#D7EAFE</color>
-    <color name="primary">#1769AA</color>
-    <color name="primary_dark">#0D4D82</color>
-    <color name="primary_soft">#D7EAFE</color>
-    <color name="success">#15956B</color>
-    <color name="waiting">#73849A</color>
-    <color name="text_primary">#172334</color>
-    <color name="text_secondary">#5E6D80</color>
-    <color name="card_stroke">#DCE5EF</color>
+    <color name="hero_background">#E4F4F7</color>
+    <color name="hero_stroke">#C5E3E9</color>
+    <color name="icon_circle_background">#CDEAF0</color>
+    <color name="primary">#0E7490</color>
+    <color name="primary_dark">#07556B</color>
+    <color name="primary_soft">#DDF2F6</color>
+    <color name="success">#07855F</color>
+    <color name="waiting">#657885</color>
+    <color name="error">#B23A48</color>
+    <color name="text_primary">#162A35</color>
+    <color name="text_secondary">#536975</color>
+    <color name="result_text_background">#EEF4FF</color>
+    <color name="result_text_label">#315F9B</color>
+    <color name="result_text_value">#173F73</color>
+    <color name="result_url_background">#EAF8F4</color>
+    <color name="result_url_label">#14775F</color>
+    <color name="result_url_value">#075F4B</color>
+    <color name="card_stroke">#D8E3E8</color>
     <color name="switch_thumb">#FFFFFFFF</color>
 </resources>
