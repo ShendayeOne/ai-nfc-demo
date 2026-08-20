@@ -37,7 +37,7 @@
 | 用户 | 负责最终需求裁决、范围控制与人工验收，不把最终决定权交给 AI。 |
 | ChatGPT | 负责需求讨论、方案分析、任务拆解和研发指令生成。 |
 | AI3 | 负责读取工程、开发、自检、修复、构建、提交和交付文档。 |
-| AI4 | 负责独立代码 Review，不默认相信 AI3 的自检结论，以需求、Diff、测试和构建证据为准。 |
+| AI1 | 负责独立代码 Review，不默认相信 AI3 的自检结论，以需求、Diff、测试和构建证据为准。 |
 
 核心原则：开发与 Review 分离；AI 的结论必须能被代码、测试、构建产物和人工运行结果验证。
 
@@ -51,10 +51,10 @@ flowchart TD
     D[ChatGPT 生成开发指令]
     E[AI3 开发]
     F[AI3 自检、测试与构建]
-    G[AI4 独立 Review]
+    G[AI1 独立 Review]
     H{Review 是否通过}
     I[AI3 根据问题修复]
-    J[AI4 二次复审]
+    J[AI1 二次复审]
     K[用户运行 Demo 人工验收]
     L[AI3 校正文档与交付信息]
     M[最终交付]
@@ -82,9 +82,9 @@ flowchart TD
 | 分析 | 原始需求、现有工程 | 用户 + ChatGPT | 确认后的范围、技术方案、开发指令 |
 | 开发 | 最终需求 + 工程 | AI3 | `app`、`nfc-reader`、资源、测试 |
 | 自检 | 代码 + 验证清单 | AI3 | Unit Test、Debug APK、Git Diff |
-| Review | 最终需求 + Git Diff + 构建证据 | AI4 | 按严重度排序的审核问题；无问题时明确通过 |
+| Review | 最终需求 + Git Diff + 构建证据 | AI1 | 按严重度排序的审核问题；无问题时明确通过 |
 | 修复 | Review 问题 | AI3 | 修复代码、回归测试、变更说明 |
-| 二次复审 | 原问题 + 修复 Diff | AI4 | 逐项闭环结论与剩余风险 |
+| 二次复审 | 原问题 + 修复 Diff | AI1 | 逐项闭环结论与剩余风险 |
 | 验收 | 最终 APK + 演示清单 | 用户 | 模拟 Text/URL、真实模式和布局人工验证结果 |
 | 交付 | 最终代码 + 验证结果 | AI3 | README、Module 接入文档、Git 提交 |
 
@@ -110,17 +110,17 @@ flowchart TD
 
 AI3 先检查再修改，沿用 Java + XML + Material 体系。模拟按钮构造标准 `NdefRecord / NdefMessage`，真实与模拟共用解析器；完成测试、构建和自检后汇报证据。
 
-### 第六步：AI4 独立 Review
+### 第六步：AI1 独立 Review
 
-AI4 从需求和 Diff 出发，不以 AI3 的“已完成”作为通过依据。重点检查解析边界、生命周期、线程、异常状态、Module 解耦、UI 文案、测试真实性和构建证据。
+AI1 从需求和 Diff 出发，不以 AI3 的“已完成”作为通过依据。重点检查解析边界、生命周期、线程、异常状态、Module 解耦、UI 文案、测试真实性和构建证据。
 
 ### 第七步：AI3 根据 Review 修复
 
 AI3 逐条确认根因，只修改有效问题；新增必要回归测试，重新执行完整构建，并说明每个问题如何闭环。
 
-### 第八步：AI4 二次复审
+### 第八步：AI1 二次复审
 
-AI4 复核原问题是否真正消失，同时检查修复是否引入新问题。不能只看 AI3 的文字说明，应查看修复 Diff 和测试结果。
+AI1 复核原问题是否真正消失，同时检查修复是否引入新问题。不能只看 AI3 的文字说明，应查看修复 Diff 和测试结果。
 
 ### 第九步：用户运行 Demo 验收
 
@@ -158,7 +158,7 @@ AI3 以最终代码为准校正 `docs/NFC-Reader-Module接入说明.md`，确认
 请在 D:\MyProjects\ai-nfc-demo 按定稿需求完成开发。先读取规范和 Git 状态，沿用现有技术栈；新增独立 :nfc-reader，app 只负责 UI；实现 Reader Mode、Text/URI 统一解析、模拟标准 NDEF、异常和生命周期；补齐 JVM 单元测试与两份 docs。最后执行 clean、testDebugUnitTest、assembleDebug，检查 APK、git diff 和敏感/构建文件，允许 commit，禁止 push。不要故意制造 Review Bug。
 ```
 
-### E. AI4 独立 Review 指令
+### E. AI1 独立 Review 指令
 
 ```text
 请对 D:\MyProjects\ai-nfc-demo 做独立代码 Review。先读最终需求、协作规范和 Git Diff，不默认相信开发者自检结论，也不要修改代码。重点检查：需求完整性；NDEF Text/URI 解析；payload 长度、编码和 URI Prefix 边界；非 NDEF/空/不支持 Record；Reader Mode 生命周期和回调线程；null/异常安全；Module API 与 app 解耦；用户文案和长内容布局；日志、冗余和过度设计；单元测试有效性；构建与 APK 证据。按严重度列出可定位的问题；若无问题，明确说明检查范围和剩余实机风险。
@@ -167,10 +167,10 @@ AI3 以最终代码为准校正 `docs/NFC-Reader-Module接入说明.md`，确认
 ### F. AI3 修复指令
 
 ```text
-请读取 AI4 Review 结果，逐项验证根因并修复确认有效的问题。保持当前简洁架构，不做无关重构；每个解析或生命周期问题都补相应回归测试。修复后重新执行 clean、testDebugUnitTest、assembleDebug，并汇报问题闭环、测试数量、APK 和 Git Diff。不要 push。
+请读取 AI1 Review 结果，逐项验证根因并修复确认有效的问题。保持当前简洁架构，不做无关重构；每个解析或生命周期问题都补相应回归测试。修复后重新执行 clean、testDebugUnitTest、assembleDebug，并汇报问题闭环、测试数量、APK 和 Git Diff。不要 push。
 ```
 
-### G. AI4 二次复审指令
+### G. AI1 二次复审指令
 
 ```text
 请对 AI3 的修复做二次独立复审。逐条对照上次问题检查代码和新增测试，确认不是只改文案或绕过症状；同时检查修复是否引入生命周期、线程、解析或 UI 回归。复核构建证据，给出“通过/不通过”和仍需人工实机验证的风险。不要修改代码。
