@@ -293,7 +293,9 @@ public class MainActivity extends AppCompatActivity {
         resultUrlContent.setText(R.string.result_placeholder);
         if (result.hasText()) {
             resultTextContent.setText(displayContent(result.getTextContent()));
-        } else if (result.hasUrl()) {
+        }
+        // Text 与 URI 可以同时存在，必须独立判断，避免组合结果遗漏 URL。
+        if (result.hasUrl()) {
             resultUrlContent.setText(displayContent(result.getUrlContent()));
         }
         resultSource.setText(source);
