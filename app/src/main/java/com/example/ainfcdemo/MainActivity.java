@@ -258,12 +258,13 @@ public class MainActivity extends AppCompatActivity {
                 resultType.setText(R.string.result_type_text_and_url);
                 break;
         }
-        resultTextContent.setText(result.hasText()
-                ? displayContent(result.getTextContent())
-                : getString(R.string.result_placeholder));
-        resultUrlContent.setText(result.hasUrl()
-                ? displayContent(result.getUrlContent())
-                : getString(R.string.result_placeholder));
+        resultTextContent.setText(R.string.result_placeholder);
+        resultUrlContent.setText(R.string.result_placeholder);
+        if (result.hasText()) {
+            resultTextContent.setText(displayContent(result.getTextContent()));
+        } else if (result.hasUrl()) {
+            resultUrlContent.setText(displayContent(result.getUrlContent()));
+        }
         resultSource.setText(source);
         setResultStatus(R.string.status_success, R.color.success);
         resultTime.setText(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date()));
